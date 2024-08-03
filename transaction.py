@@ -11,3 +11,9 @@ class Transaction:
     def __repr__(self) -> str:
         return self.__str__()
 
+    
+class MemberTransaction(Transaction):
+    def __init__(self, date, package_size, provider, price = 0, discount = 0):
+        super().__init__(self, date, package_size, provider)
+        self.price = price
+        self.discount = discount
