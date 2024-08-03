@@ -27,3 +27,18 @@ class Delivery:
             self._delivery_price = "Ignored"
 
 
+class SSizePackageDelivery(Delivery):
+    
+    def _calculate(self, transaction: Transaction, member: Member):
+        print("SSizePackageDelivery")
+        min_delivery_price = float("inf")
+        
+        for rule in self.delivery_rules:
+            if rule.size == transaction.package_size and rule.price < min_delivery_price:
+                min_delivery_price = rule.price
+                
+            if rule.check_rule(transaction, member):
+                self._delivery_price = rule.price
+                
+        self._discount = self._delivery_price - min_delivery_price
+        self._delivery_price = self._delivery_price - self._discount
