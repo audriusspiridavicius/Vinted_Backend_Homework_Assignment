@@ -1,7 +1,7 @@
 from transaction import Transaction
 from member import Member
 from enums import PackageSizeEnum
-from delivery import SSizePackageDelivery, Delivery
+from delivery import SmallestDeliveryPriceAmongProviders, Delivery
 from delivery_rule import DeliveryRule
 
 
@@ -18,7 +18,7 @@ class DeliveryManagerProvider:
         delivery_manager = Delivery(self.delivery_rules)
         
         if self.transaction.package_size == PackageSizeEnum.S:
-            delivery_manager = SSizePackageDelivery(self.delivery_rules)
+            delivery_manager = SmallestDeliveryPriceAmongProviders(self.delivery_rules)
         
         return delivery_manager
     

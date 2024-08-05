@@ -36,7 +36,7 @@ class Delivery:
             self._delivery_price = "Ignored"
 
 
-class SSizePackageDelivery(Delivery):
+class SmallestDeliveryPriceAmongProviders(Delivery):
     
     
     def calculate(self, transaction: Transaction, member: Member):
