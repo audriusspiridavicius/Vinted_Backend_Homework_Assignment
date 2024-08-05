@@ -1,9 +1,9 @@
 from transaction import Transaction
 from member import Member
-
+from enums import DeliveryProviderEnum, PackageSizeEnum
 class DeliveryRule:
     
-    def __init__(self, provider:str, size:str, price:int) -> None:
+    def __init__(self, provider:DeliveryProviderEnum, size:PackageSizeEnum, price:int) -> None:
         self.provider = provider
         self.size = size
         self.price = price
