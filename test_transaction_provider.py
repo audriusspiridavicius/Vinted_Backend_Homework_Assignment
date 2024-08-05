@@ -2,6 +2,8 @@ import os
 import pytest
 import tempfile
 from transaction_provider import TransactionProvider, TransactionsFromTextFile, Transaction
+from enums import DeliveryProviderEnum, PackageSizeEnum
+
 
 @pytest.fixture
 def create_test_transaction_file():
@@ -20,21 +22,21 @@ def create_test_transaction_file():
 @pytest.fixture
 def single_transaction(create_test_transaction_file):
     
-    # return create_test_transaction_file([Transaction("2012-10-11", "L", "AB")])
-    return next(create_test_transaction_file([Transaction("2012-10-11", "L", "AB")]))
+    return next(create_test_transaction_file([Transaction("2012-10-11", PackageSizeEnum.L, DeliveryProviderEnum.LP)]))
     
 @pytest.fixture    
 def multiple_transactions(create_test_transaction_file):
     
     transactions = []
     for number in range(1,11):
-        transactions.append(Transaction(f"2012-10-{number}", f"L{number}", "AB{number}"))
+        transactions.append(Transaction(f"2012-10-{number}", PackageSizeEnum.M, DeliveryProviderEnum.MR))
         
     return next(create_test_transaction_file(transactions))
 
 @pytest.fixture
 def empty_transaction_file(create_test_transaction_file):
     return next(create_test_transaction_file([]))
+
 
 class TestTransactionProvider:
     
