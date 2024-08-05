@@ -32,4 +32,4 @@ class MemberTransaction(Transaction):
         self.discount = discount
     
     def __str__(self) -> str:
-        return f"{super().__str__()} {self.price} {self.discount if self.discount > 0 else ("" if self.price == "Ignored" else '-')}"
+        return f"{super().__str__()} {format(self.price,".2f") if self.price != "Ignored" else self.price} {format(self.discount,".2f") if self.discount > 0 else ("" if self.price == "Ignored" else '-')}"
