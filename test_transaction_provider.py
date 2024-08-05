@@ -1,3 +1,4 @@
+import datetime
 import os
 import pytest
 import tempfile
@@ -10,7 +11,7 @@ def create_test_transaction_file():
     def _create_test_transaction_file(transactions: list[Transaction]) -> str:
         with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as f:
             for transaction in transactions:
-                f.write(f"{transaction}\n")  # Ensure Transaction objects are converted to string properly
+                f.write(f"{transaction}\n")
             temp_file_name = f.name
 
         yield temp_file_name
@@ -29,7 +30,7 @@ def multiple_transactions(create_test_transaction_file):
     
     transactions = []
     for number in range(1,11):
-        transactions.append(Transaction(f"2012-10-{number}", PackageSizeEnum.M, DeliveryProviderEnum.MR))
+        transactions.append(Transaction(f"2012-10-{number:0>2}", PackageSizeEnum.M, DeliveryProviderEnum.MR))
         
     return next(create_test_transaction_file(transactions))
 
@@ -74,3 +75,27 @@ class TestTransactionsFromTextFile:
         transactions = transactions_provider.get_transactions(empty_transaction_file)
         
         assert len(transactions) == 0
+        
+    def test_date_type(self, single_transaction):
+        
+        transactions_provider = TransactionsFromTextFile()
+        
+        transactions = transactions_provider.get_transactions(single_transaction)
+        
+        assert len(transactions) == 1
+        
+        transaction = transactions[0]
+        
+        assert isinstance(transaction.date, datetime.date)
+        
+    def test_date_not_string_type(self, single_transaction):
+        
+        transactions_provider = TransactionsFromTextFile()
+        
+        transactions = transactions_provider.get_transactions(single_transaction)
+        
+        assert len(transactions) == 1
+        
+        transaction = transactions[0]
+        
+        assert not isinstance(transaction.date, str)

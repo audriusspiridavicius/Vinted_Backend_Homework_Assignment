@@ -1,6 +1,9 @@
 from enums import PackageSizeEnum, DeliveryProviderEnum
+import datetime
+
+
 class Transaction:
-    def __init__(self, date, package_size:str, provider:str):
+    def __init__(self, date:datetime.date, package_size:str, provider:str):
         
         self.date = date
         self._package_size = package_size
@@ -23,7 +26,7 @@ class Transaction:
 
     
 class MemberTransaction(Transaction):
-    def __init__(self, date, _package_size:str, _provider:str, price = 0, discount = 0):
+    def __init__(self, date:datetime.date, _package_size:str, _provider:str, price = 0, discount = 0):
         super().__init__(date, _package_size, _provider)
         self.price = price
         self.discount = discount

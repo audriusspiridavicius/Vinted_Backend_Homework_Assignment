@@ -1,5 +1,7 @@
 import os
 from transaction import Transaction
+import datetime
+
 
 class TransactionProvider:
     
@@ -21,9 +23,12 @@ class TransactionsFromTextFile(TransactionProvider):
                     transaction_data = transaction_line.strip().split()
                     transaction_data = {index:tran for index, tran in enumerate(transaction_data)}
                     
+                    transaction_date = transaction_data.get(0, "")
+                    transaction_date = datetime.date.fromisoformat(transaction_date)
+                    
                     transactions.append(
                         Transaction(
-                            date=transaction_data.get(0, ""),
+                            date=transaction_date,
                             package_size=transaction_data.get(1, ""),
                             provider=transaction_data.get(2, "")
                         )
