@@ -9,7 +9,8 @@ class Member:
         self.__transactions.append(transaction)
 
     def display_transactions(self):
-        print("dispay member transactions")
+    def get_member_transactions(self):
+        return self.__transactions
 
 if __name__ == "__main__":
     
