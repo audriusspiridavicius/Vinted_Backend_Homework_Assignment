@@ -68,7 +68,7 @@ class FreeDelivery(Delivery):
         
         d_data = super().calculate(transaction, member)
 
-        shipment_count = self.__get_shipment_count(transaction, member)
+        shipment_count = self._get_shipment_count(transaction, member)
         
         if self.nth_shipment_free > 0 and shipment_count > 0 and ((shipment_count + 1) % self.nth_shipment_free == 0):
             d_data.discount = d_data.delivery_price
@@ -77,7 +77,7 @@ class FreeDelivery(Delivery):
         return d_data
     
     
-    def __get_shipment_count(self, transaction: Transaction, member: Member):
+    def _get_shipment_count(self, transaction: Transaction, member: Member):
         
         shipment_count = 0
         for member_transaction in member.get_member_transactions():
@@ -95,9 +95,10 @@ class FreeDeliveryNthTimes(FreeDelivery):
     
     def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
         
-        shipment_count = self.__get_shipment_count()
+        shipment_count = self._get_shipment_count(transaction, member)
         
         if shipment_count < self.nth_shipment_free * self.nth_times:
             return super().calculate(transaction, member)
-
-
+        
+        return Delivery.calculate(self, transaction, member)
+        
