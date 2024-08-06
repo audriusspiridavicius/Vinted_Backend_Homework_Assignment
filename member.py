@@ -3,7 +3,10 @@ from transaction import MemberTransaction
 
 class Member:
     
-    __transactions:list[MemberTransaction] = []
+    def __init__(self, transactions:list[MemberTransaction] = None) -> None:
+        if transactions is None:
+            transactions = []
+        self.__transactions = transactions
 
     def add_transaction(self, transaction:MemberTransaction) -> None:
         self.__transactions.append(transaction)
