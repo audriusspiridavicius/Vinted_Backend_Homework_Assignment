@@ -86,3 +86,18 @@ class FreeDelivery(Delivery):
         return shipment_count
 
     
+class FreeDeliveryNthTimes(FreeDelivery):
+    
+    def __init__(self, delivery_rules: list[DeliveryRule], nth_shipment_free: int = 3, nth_times = 1) -> None:
+        super().__init__(delivery_rules, nth_shipment_free)
+        self.nth_times = nth_times
+    
+    
+    def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
+        
+        shipment_count = self.__get_shipment_count()
+        
+        if shipment_count < self.nth_shipment_free * self.nth_times:
+            return super().calculate(transaction, member)
+
+
