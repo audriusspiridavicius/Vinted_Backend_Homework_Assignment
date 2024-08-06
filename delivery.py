@@ -54,4 +54,35 @@ class SmallestDeliveryPriceAmongProviders(Delivery):
         
         
         return DeliveryData(delivery_price=self._delivery_price, discount=self._discount)
-       
+
+
+class FreeDelivery(Delivery):
+    
+    def __init__(self, delivery_rules: list[DeliveryRule], nth_shipment_free:int = 3) -> None:
+        
+        self.nth_shipment_free = nth_shipment_free
+        super().__init__(delivery_rules)
+    
+    
+    def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
+        
+        d_data = super().calculate(transaction, member)
+
+        shipment_count = self.__get_shipment_count(transaction, member)
+        
+        if self.nth_shipment_free > 0 and shipment_count > 0 and ((shipment_count + 1) % self.nth_shipment_free == 0):
+            d_data.discount = d_data.delivery_price
+            d_data.delivery_price = 0
+        
+        return d_data
+    
+    
+    def __get_shipment_count(self, transaction: Transaction, member: Member):
+        
+        shipment_count = 0
+        for member_transaction in member.get_member_transactions():
+            if member_transaction.package_size == transaction.package_size and member_transaction.provider == transaction.provider:
+                shipment_count += 1
+        return shipment_count
+
+    
