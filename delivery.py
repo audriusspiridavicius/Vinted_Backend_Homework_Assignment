@@ -1,7 +1,7 @@
 from delivery_data import DeliveryData
 from delivery_rule import DeliveryRule
 from member import Member
-from transaction import Transaction
+from transaction import MemberTransaction, Transaction
 
 class Delivery:
     
@@ -34,6 +34,45 @@ class Delivery:
         else:
 
             self._delivery_price = "Ignored"
+            
+
+class DeliveryMaxDiscount(Delivery):
+    def __init__(self, delivery:Delivery,  max_discount_value = 10) -> None:
+        self.delivery = delivery
+        self.max_discount_value = max_discount_value
+         
+    
+    def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
+        
+        delivery_data = self.delivery.calculate(transaction, member)
+        
+        total_discount_applied = self._get_total_discount_applied(member, transaction, member.get_member_transactions())
+        
+        max_posible_discount = self._get_posible_discount(total_discount_applied)
+        
+        if delivery_data.discount > max_posible_discount:
+            delivery_data.delivery_price = delivery_data.delivery_price + delivery_data.discount - max_posible_discount
+            delivery_data.discount = max_posible_discount
+            
+        
+        return delivery_data
+        
+        
+    def _get_total_discount_applied(self, member:Member,transaction:Transaction,  transactions:list[MemberTransaction] = None):
+        
+
+        total_discounts = sum([transaction.discount for transaction in transactions])
+        
+        return total_discounts
+    
+    
+    def _get_posible_discount(self, total_discount_applied:float):
+        if total_discount_applied < self.max_discount_value:
+            return self.max_discount_value - total_discount_applied
+        else:
+            return 0    
+
+
 
 
 class SmallestDeliveryPriceAmongProviders(Delivery):
