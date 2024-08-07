@@ -71,8 +71,9 @@ class FreeDelivery(Delivery):
         shipment_count = self._get_shipment_count(transaction, member)
         
         if self.nth_shipment_free > 0 and shipment_count > 0 and ((shipment_count + 1) % self.nth_shipment_free == 0):
+
             d_data.discount = d_data.delivery_price
-            d_data.delivery_price = 0
+            d_data.delivery_price = d_data.delivery_price - d_data.discount
         
         return d_data
     
