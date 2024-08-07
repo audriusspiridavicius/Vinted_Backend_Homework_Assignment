@@ -1,5 +1,5 @@
 from transaction import MemberTransaction
-
+from datetime import date
 
 class Member:
     
@@ -14,6 +14,9 @@ class Member:
     def display_transactions(self):
     def get_member_transactions(self):
         return self.__transactions
+    
+    def get_transactions(self, start_date:date, end_date:date):
+        return [tran for tran in self.__transactions if start_date <= tran.date <= end_date]
 
 if __name__ == "__main__":
     
