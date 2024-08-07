@@ -20,5 +20,5 @@ class DeliveryManagerProvider:
         if self.transaction.package_size == PackageSizeEnum.S:
             delivery_manager = SmallestDeliveryPriceAmongProviders(self.delivery_rules)
         
-        return delivery_manager
+        return DeliveryMaxDiscountPerMonth(delivery_manager)
     
