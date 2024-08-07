@@ -12,6 +12,10 @@ class Member:
         self.__transactions.append(transaction)
 
     def display_transactions(self):
+        
+        for tran in self.__transactions:
+            print(tran)
+            
     def get_member_transactions(self):
         return self.__transactions
     
