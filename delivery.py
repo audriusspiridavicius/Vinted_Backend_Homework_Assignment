@@ -102,3 +102,26 @@ class FreeDeliveryNthTimes(FreeDelivery):
         
         return Delivery.calculate(self, transaction, member)
         
+
+    
+
+class FreeDeliveryNTimesMonth(FreeDeliveryNthTimes):
+    
+    def _get_shipment_count(self, transaction: Transaction, member: Member):
+        
+        transaction_date = transaction.date
+        month = transaction_date.month
+        year = transaction_date.year
+        
+        start_date = datetime.date(year, month, 1)
+        end_date = datetime.date(year, month, get_days_in_month(year, month))        
+        
+        member_transactions = member.get_member_transactions()
+        
+        shipment_count = 0
+        
+        for m_tran in member_transactions:
+            if m_tran.date >= start_date and m_tran.date <= end_date and m_tran.package_size == transaction.package_size and m_tran.provider == transaction.provider:
+                shipment_count += 1
+        
+        return shipment_count
