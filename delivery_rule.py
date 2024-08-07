@@ -3,7 +3,7 @@ from member import Member
 from enums import DeliveryProviderEnum, PackageSizeEnum
 class DeliveryRule:
     
-    def __init__(self, provider:DeliveryProviderEnum, size:PackageSizeEnum, price:int) -> None:
+    def __init__(self, provider:DeliveryProviderEnum, size:PackageSizeEnum, price:float) -> None:
         self.provider = provider
         self.size = size
         self.price = price
