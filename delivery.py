@@ -2,6 +2,8 @@ from delivery_data import DeliveryData
 from delivery_rule import DeliveryRule
 from member import Member
 from transaction import MemberTransaction, Transaction
+import datetime
+from functions import get_days_in_month 
 
 class Delivery:
     
@@ -73,12 +75,22 @@ class DeliveryMaxDiscount(Delivery):
             return 0    
 
 
+class DeliveryMaxDiscountPerMonth(DeliveryMaxDiscount):
+    
+    def _get_total_discount_applied(self, member: Member, transaction: Transaction, transactions: list[MemberTransaction] = None):
+        start_date = datetime.date(transaction.date.year, transaction.date.month, 1)
+        end_date = datetime.date(transaction.date.year, transaction.date.month, get_days_in_month(transaction.date.year, transaction.date.month))
+        
+        transactions = member.get_transactions(start_date, end_date)
+        
+        
+        return super()._get_total_discount_applied(member, transaction, transactions)
 
 
 class SmallestDeliveryPriceAmongProviders(Delivery):
     
     
-    def calculate(self, transaction: Transaction, member: Member):
+    def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
         min_delivery_price = float("inf")
         
         for rule in self.delivery_rules:
