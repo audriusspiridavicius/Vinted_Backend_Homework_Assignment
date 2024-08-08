@@ -35,13 +35,14 @@ if __name__ == "__main__":
     
     
     for transaction in transactions:
-        
-        delivery_manger = DeliveryManagerProvider(transaction, customer, delivery_rules)
-        
-        delivery_calculation_manager = delivery_manger.get_manager()
-        delivery_data = delivery_calculation_manager.calculate(transaction, customer)
-        
-        customer.add_transaction(MemberTransaction(**transaction.__dict__, price=delivery_data.delivery_price, discount=delivery_data.discount))
-    
+        if not transaction.ignored:
+            delivery_manger = DeliveryManagerProvider(transaction, customer, delivery_rules)
+            
+            delivery_calculation_manager = delivery_manger.get_manager()
+            delivery_data = delivery_calculation_manager.calculate(transaction, customer)
+            
+            customer.add_transaction(MemberTransaction(**transaction.__dict__, price=delivery_data.delivery_price, discount=delivery_data.discount))
+        else:
+            customer.add_transaction(MemberTransaction(**transaction.__dict__, price="Ignored"))
     customer.display_transactions()
     

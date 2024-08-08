@@ -11,16 +11,16 @@ class Member:
     def add_transaction(self, transaction:MemberTransaction) -> None:
         self.__transactions.append(transaction)
 
-    def display_transactions(self):
+    def display_transactions(self) -> None:
         
         for tran in self.__transactions:
             print(tran)
             
-    def get_member_transactions(self):
+    def get_member_transactions(self) -> list[MemberTransaction]:
         return self.__transactions
     
-    def get_transactions(self, start_date:date, end_date:date):
-        return [tran for tran in self.__transactions if start_date <= tran.date <= end_date]
+    def get_transactions(self, start_date:date, end_date:date) -> list[MemberTransaction]:
+        return [tran for tran in self.__transactions if not tran.ignored and start_date <= tran.date <= end_date]
 
 if __name__ == "__main__":
     

@@ -24,7 +24,6 @@ class TransactionsFromTextFile(TransactionProvider):
                     transaction_data = {index:tran for index, tran in enumerate(transaction_data)}
                     
                     transaction_date = transaction_data.get(0, "")
-                    transaction_date = datetime.date.fromisoformat(transaction_date)
                     
                     transactions.append(
                         Transaction(

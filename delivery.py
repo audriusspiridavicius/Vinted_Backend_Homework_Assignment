@@ -7,9 +7,6 @@ from functions import get_days_in_month
 
 class Delivery:
     
-
-    
-    
     def __init__(self, delivery_rules:list[DeliveryRule]) -> None:
 
         self.delivery_rules = delivery_rules
@@ -24,7 +21,6 @@ class Delivery:
 
         return delivery_data
         
-            
     def _calculate(self,transaction:Transaction, member:Member):
                 
         for rule in self.delivery_rules:
@@ -35,13 +31,13 @@ class Delivery:
 
             self._delivery_price = "Ignored"
             
+            
 
 class DeliveryMaxDiscount(Delivery):
     def __init__(self, delivery:Delivery,  max_discount_value = 10) -> None:
         self.delivery = delivery
         self.max_discount_value = max_discount_value
          
-    
     def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
         
         delivery_data = self.delivery.calculate(transaction, member)
@@ -54,17 +50,12 @@ class DeliveryMaxDiscount(Delivery):
             delivery_data.delivery_price = delivery_data.delivery_price + delivery_data.discount - max_posible_discount
             delivery_data.discount = max_posible_discount
             
-        
         return delivery_data
-        
         
     def _get_total_discount_applied(self, member:Member,transaction:Transaction,  transactions:list[MemberTransaction] = None):
         
-
         total_discounts = sum([transaction.discount for transaction in transactions])
-        
         return total_discounts
-    
     
     def _get_posible_discount(self, total_discount_applied:float):
         if total_discount_applied < self.max_discount_value:
@@ -81,12 +72,10 @@ class DeliveryMaxDiscountPerMonth(DeliveryMaxDiscount):
         
         transactions = member.get_transactions(start_date, end_date)
         
-        
         return super()._get_total_discount_applied(member, transaction, transactions)
 
 
 class SmallestDeliveryPriceAmongProviders(Delivery):
-    
     
     def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
         min_delivery_price = float("inf")
@@ -142,7 +131,6 @@ class FreeDeliveryNthTimes(FreeDelivery):
         super().__init__(delivery_rules, nth_shipment_free)
         self.nth_times = nth_times
     
-    
     def calculate(self, transaction: Transaction, member: Member) -> DeliveryData:
         
         shipment_count = self._get_shipment_count(transaction, member)
@@ -152,8 +140,6 @@ class FreeDeliveryNthTimes(FreeDelivery):
         
         return Delivery.calculate(self, transaction, member)
         
-
-    
 
 class FreeDeliveryNTimesMonth(FreeDeliveryNthTimes):
     
@@ -166,12 +152,12 @@ class FreeDeliveryNTimesMonth(FreeDeliveryNthTimes):
         start_date = datetime.date(year, month, 1)
         end_date = datetime.date(year, month, get_days_in_month(year, month))        
         
-        member_transactions = member.get_member_transactions()
+        member_transactions = member.get_transactions(start_date, end_date)
         
         shipment_count = 0
         
         for m_tran in member_transactions:
-            if m_tran.date >= start_date and m_tran.date <= end_date and m_tran.package_size == transaction.package_size and m_tran.provider == transaction.provider:
+            if m_tran.package_size == transaction.package_size and m_tran.provider == transaction.provider:
                 shipment_count += 1
         
         return shipment_count
