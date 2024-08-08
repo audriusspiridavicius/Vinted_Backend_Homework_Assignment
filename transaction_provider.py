@@ -33,7 +33,8 @@ class TransactionsFromTextFile(TransactionProvider):
                             provider=transaction_data.get(2, "")
                         )
                     )
-                
+        else:
+            print(f"file({filename}) was not found! Please check filename and try again.")        
         return transactions
 
         
