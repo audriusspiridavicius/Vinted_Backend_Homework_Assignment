@@ -20,10 +20,8 @@ class Delivery:
         
         self._calculate(transaction, member)
         
-        delivery_data = DeliveryData()
-        delivery_data.delivery_price = self._delivery_price
+        delivery_data = DeliveryData(delivery_price=self._delivery_price)
 
-        
         return delivery_data
         
             
