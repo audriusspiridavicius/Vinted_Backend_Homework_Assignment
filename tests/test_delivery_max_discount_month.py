@@ -3,7 +3,7 @@ from delivery import DeliveryMaxDiscountPerMonth, FreeDelivery, FreeDeliveryNthT
 from member import Member
 from transaction import Transaction, MemberTransaction
 from enums import DeliveryProviderEnum, PackageSizeEnum
-from test_settings import delivery_rules, LP_L
+from tests.test_settings import delivery_rules, LP_L
 from datetime import date
 
 

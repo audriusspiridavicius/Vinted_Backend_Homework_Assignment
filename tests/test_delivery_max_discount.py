@@ -1,5 +1,5 @@
 import pytest
-from test_settings import delivery_rules, LP_L
+from tests.test_settings import delivery_rules, LP_L
 from transaction import MemberTransaction, Transaction
 from member import Member
 from datetime import date
