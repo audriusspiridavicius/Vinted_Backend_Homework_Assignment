@@ -1,33 +1,10 @@
 import pytest
-from delivery_rule import BasicDeliveryRule
 from enums import DeliveryProviderEnum, PackageSizeEnum
 from member import Member
 from delivery import Delivery
 from transaction import Transaction
 from datetime import date
-
-LP_S = 1.5
-LP_M = 4.9
-LP_L = 6.9
-
-MR_S = 2
-MR_M = 3
-MR_L = 4
-
-
-@pytest.fixture
-def delivery_rules():
-    
-    
-    
-    return [
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.S, LP_S),
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.M, LP_M),
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.L, LP_L),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.S, MR_S),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.M, MR_M),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.L, MR_L),
-    ]
+from .test_settings import delivery_rules, LP_S, MR_L, MR_M, MR_S, LP_M, LP_L
 
 @pytest.fixture
 def delivery(delivery_rules):
@@ -42,16 +19,13 @@ class TestRegularDeliveryCalculation:
     def test_small_lp_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.S, provider=DeliveryProviderEnum.LP)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == LP_S
         
-        
     def test_small_mr_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.S, provider=DeliveryProviderEnum.MR)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == MR_S
@@ -59,7 +33,6 @@ class TestRegularDeliveryCalculation:
     def test_medium_lp_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.M, provider=DeliveryProviderEnum.LP)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == LP_M
@@ -67,7 +40,6 @@ class TestRegularDeliveryCalculation:
     def test_medium_mr_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.M, provider=DeliveryProviderEnum.MR)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == MR_M
@@ -75,7 +47,6 @@ class TestRegularDeliveryCalculation:
     def test_large_lp_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.L, provider=DeliveryProviderEnum.LP)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == LP_L
@@ -83,7 +54,21 @@ class TestRegularDeliveryCalculation:
     def test_large_mr_price(self, delivery:Delivery):
         
         transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.L, provider=DeliveryProviderEnum.MR)
-        
         delivary_data = delivery.calculate(transaction, self.customer)
         
         assert delivary_data.delivery_price == MR_L
+        
+    def test_invalid_package_size(self, delivery:Delivery):
+        
+        transaction = Transaction(date=date(year=2020, month=10, day=25), package_size="G", provider=DeliveryProviderEnum.MR)
+        delivary_data = delivery.calculate(transaction, self.customer)
+        
+        assert delivary_data.delivery_price == "Ignored"
+        
+    def test_invalid_delivery_provider(self, delivery:Delivery):
+        
+        transaction = Transaction(date=date(year=2020, month=10, day=25), package_size=PackageSizeEnum.S, provider="abc")
+        delivary_data = delivery.calculate(transaction, self.customer)
+
+        assert delivary_data.delivery_price == "Ignored"
+        

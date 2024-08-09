@@ -89,5 +89,3 @@ class TestFreeDeliveryNTimesNotApplied:
         
         assert delivery_data.delivery_price == LPL_PRICE
         assert delivery_data.discount == 0
-        
-    # def test_n_over_nth_times

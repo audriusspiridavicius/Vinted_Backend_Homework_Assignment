@@ -1,33 +1,10 @@
 import pytest
-from delivery_rule import BasicDeliveryRule
-from enums import DeliveryProviderEnum, PackageSizeEnum
 from delivery import SmallestDeliveryPriceAmongProviders
 from member import Member
 from transaction import Transaction
 from datetime import date
+from .test_settings import delivery_rules, DeliveryProviderEnum, PackageSizeEnum, LP_S, MR_L, MR_M, MR_S
 
-LP_S = 1.5
-LP_M = 4.9
-LP_L = 6.9
-
-MR_S = 2
-MR_M = 3
-MR_L = 4
-
-
-@pytest.fixture
-def delivery_rules():
-    
-    
-    
-    return [
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.S, LP_S),
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.M, LP_M),
-        BasicDeliveryRule(DeliveryProviderEnum.LP, PackageSizeEnum.L, LP_L),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.S, MR_S),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.M, MR_M),
-        BasicDeliveryRule(DeliveryProviderEnum.MR, PackageSizeEnum.L, MR_L),
-    ]
 
 @pytest.fixture
 def delivery(delivery_rules):
