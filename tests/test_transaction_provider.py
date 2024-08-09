@@ -5,6 +5,10 @@ import tempfile
 from transaction_provider import TransactionProvider, TransactionsFromTextFile, Transaction
 from enums import DeliveryProviderEnum, PackageSizeEnum
 
+test_invalid_date_value = "2012a-10-11"
+test_invalid_package_size_value = "LL"
+test_invalid_delivery_provider_value = "LP123"
+
 
 @pytest.fixture
 def create_test_transaction_file():
@@ -38,6 +42,21 @@ def multiple_transactions(create_test_transaction_file):
 def empty_transaction_file(create_test_transaction_file):
     return next(create_test_transaction_file([]))
 
+
+@pytest.fixture
+def invalid_date_transaction_file(create_test_transaction_file):
+    
+    return next(create_test_transaction_file([Transaction(test_invalid_date_value, PackageSizeEnum.L, DeliveryProviderEnum.LP)]))
+    
+@pytest.fixture
+def invalid_package_size_transaction_file(create_test_transaction_file):
+    
+    return next(create_test_transaction_file([Transaction("2012-10-11", test_invalid_package_size_value, DeliveryProviderEnum.LP)]))
+
+@pytest.fixture
+def invalid_delivery_provider_transaction_file(create_test_transaction_file):
+    
+    return next(create_test_transaction_file([Transaction("2012-10-11", PackageSizeEnum.L, test_invalid_delivery_provider_value)]))
 
 class TestTransactionProvider:
     
@@ -99,3 +118,27 @@ class TestTransactionsFromTextFile:
         transaction = transactions[0]
         
         assert not isinstance(transaction.date, str)
+        
+    def test_date_invalid(self, invalid_date_transaction_file):
+        
+        transactions_provider = TransactionsFromTextFile()
+        transactions = transactions_provider.get_transactions(invalid_date_transaction_file)
+        
+        assert transactions[0].ignored == True
+        assert transactions[0].date == test_invalid_date_value
+    
+    def test_package_size_invalid_value(self, invalid_package_size_transaction_file):
+        transactions_provider = TransactionsFromTextFile()
+        transactions = transactions_provider.get_transactions(invalid_package_size_transaction_file)
+        
+        assert transactions[0].ignored == False
+        assert transactions[0].package_size == test_invalid_package_size_value
+    
+    
+    def test_delivery_provider_invalid_value(self, invalid_delivery_provider_transaction_file):
+        transactions_provider = TransactionsFromTextFile()
+        transactions = transactions_provider.get_transactions(invalid_delivery_provider_transaction_file)
+        
+        assert transactions[0].ignored == False
+        assert transactions[0].provider == test_invalid_delivery_provider_value
+    
