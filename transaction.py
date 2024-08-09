@@ -33,8 +33,9 @@ class Transaction:
                 self._date = date_value
         else:
             self._date = date_value
+            
     def __str__(self) -> str:
-        return f"{self.date} {f"{self.package_size.name} " if isinstance(self.package_size, PackageSizeEnum) else f"{self.package_size}"}{f'{self.provider.name}' if isinstance(self.provider, DeliveryProviderEnum) else self.provider}"
+        return f"{self.date} {f"{self.package_size.name} " if isinstance(self.package_size, PackageSizeEnum) else f"{self.package_size} "}{f'{self.provider.name} ' if isinstance(self.provider, DeliveryProviderEnum) else f"{self.provider} "}"
     
     def __repr__(self) -> str:
         return self.__str__()
@@ -47,4 +48,4 @@ class MemberTransaction(Transaction):
         self.discount = discount
     
     def __str__(self) -> str:
-        return f"{super().__str__()} {format(self.price,".2f") if self.price != "Ignored" else self.price} {format(self.discount,".2f") if self.discount > 0 else ("" if self.price == "Ignored" else '-')}"
+        return f"{super().__str__()}{format(self.price,".2f") if self.price != "Ignored" else f"{self.price}"} {format(self.discount,".2f") if self.discount > 0 else ("" if self.price == "Ignored" else '-')}"
